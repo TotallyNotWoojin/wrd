@@ -22,11 +22,11 @@ class LlamaLLM(BaseLLM):
             from huggingface_hub import HfFolder
             import torch
 
-            # Use the class default model_name
-            model_name = cls.model_name
-            # Retrieve Hugging Face token from local CLI login
+            # Determine the model name (literal) and retrieve HF token
+            model_name = values.get("model_name", "meta-llama/Llama-3.1-8B-Instruct")
             hf_token = HfFolder.get_token()
 
+            # Load tokenizer and model with authentication
             tokenizer = AutoTokenizer.from_pretrained(
                 model_name,
                 token=hf_token
@@ -38,10 +38,10 @@ class LlamaLLM(BaseLLM):
                 token=hf_token
             )
 
-            # Populate Pydantic values
+            # Store in validated values
             values["tokenizer"] = tokenizer
             values["model"] = model
-            values["llm_model"] = model  # align with BaseLLM usage
+            values["llm_model"] = model
         except ImportError as e:
             raise ValueError(
                 "Missing dependencies. Run `pip install transformers huggingface_hub`"
@@ -53,10 +53,10 @@ class LlamaLLM(BaseLLM):
 
     def is_max_token(self, model_name: str, query: str) -> bool:
         token_count = len(self.tokenizer.encode(query))
-        return token_count > self.models.get(model_name, 0)
+        return token_count > self.models.get(model_name, 8192)
 
     def _prepare_prompt(self, prompt: str) -> str:
-        # LLaMA chat-format tokens for user/assistant
+        # Use LLaMA chat-format tokens to delineate roles
         return (
             "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n"
             f"{prompt}\n"
@@ -64,14 +64,15 @@ class LlamaLLM(BaseLLM):
         )
 
     def _parse_response(self, response: str) -> str:
-        # Simple strip
+        # Clean whitespace
         return response.strip()
 
     def generate(self, query: str, **kwargs: Any) -> str:
-        # Prepare and tokenize
+        # Format, tokenize, and move inputs to model device
         prompt = self._prepare_prompt(query)
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
 
+        # Generate with appropriate stopping token
         outputs = self.model.generate(
             **inputs,
             max_new_tokens=512,
@@ -80,5 +81,6 @@ class LlamaLLM(BaseLLM):
             top_p=0.95,
             eos_token_id=self.tokenizer.eos_token_id,
         )
+        # Decode and return
         raw = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return self._parse_response(raw)
