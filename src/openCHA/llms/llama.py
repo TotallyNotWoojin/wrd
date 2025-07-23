@@ -1,3 +1,4 @@
+
 from typing import Any, Dict, List
 from openCHA.llms import BaseLLM
 from pydantic import model_validator
@@ -21,9 +22,10 @@ class LlamaLLM(BaseLLM):
             from huggingface_hub import HfFolder
             import torch
 
+            # Use the class default model_name
+            model_name = cls.model_name
             # Retrieve Hugging Face token from local CLI login
             hf_token = HfFolder.get_token()
-            model_name = values.get("model_name", cls.model_name)
 
             tokenizer = AutoTokenizer.from_pretrained(
                 model_name,
@@ -40,7 +42,6 @@ class LlamaLLM(BaseLLM):
             values["tokenizer"] = tokenizer
             values["model"] = model
             values["llm_model"] = model  # align with BaseLLM usage
-            values["model_name"] = model_name
         except ImportError as e:
             raise ValueError(
                 "Missing dependencies. Run `pip install transformers huggingface_hub`"
