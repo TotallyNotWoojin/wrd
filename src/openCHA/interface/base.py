@@ -52,7 +52,7 @@ class Interface(BaseModel):
         reset,
         upload_meta,
         available_tasks,
-        share=False,
+        share=True,
     ):
         """
         Prepare the Gradio interface for the chatbot.
@@ -141,7 +141,7 @@ class Interface(BaseModel):
                 upload_meta, [chatbot, btn], [chatbot], queue=False
             )
 
-        demo.launch(share=True)
+        demo.launch(share=share)
         self.interface = demo
 
     def close(self):

@@ -18,11 +18,11 @@ class LlamaLLM(BaseLLM):
     def validate_environment(cls, values: Dict) -> Dict:
         try:
             from transformers import AutoTokenizer, AutoModelForCausalLM
-            from openCHA.utils import get_from_dict_or_env
+            from huggingface_hub import HfFolder
             import torch
 
-            # Retrieve Hugging Face token from env or passed kwargs
-            hf_token = get_from_dict_or_env(values, "huggingface_token", "HUGGINGFACE_TOKEN")
+            # Retrieve Hugging Face token from local CLI login
+            hf_token = HfFolder.get_token()
             model_name = values.get("model_name", cls.model_name)
 
             tokenizer = AutoTokenizer.from_pretrained(
@@ -43,7 +43,7 @@ class LlamaLLM(BaseLLM):
             values["model_name"] = model_name
         except ImportError as e:
             raise ValueError(
-                "Missing dependencies. Run `pip install transformers huggingface_hub opencha-utils`"
+                "Missing dependencies. Run `pip install transformers huggingface_hub`"
             ) from e
         return values
 
