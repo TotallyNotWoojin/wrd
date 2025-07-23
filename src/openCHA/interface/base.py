@@ -141,7 +141,7 @@ class Interface(BaseModel):
                 upload_meta, [chatbot, btn], [chatbot], queue=False
             )
 
-        demo.launch(share=share)
+        demo.launch(share=True)
         self.interface = demo
 
     def close(self):
