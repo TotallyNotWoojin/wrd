@@ -51,7 +51,7 @@ class RunPythonCode(BaseTask):
 
         """
 
-        values["llm_model"] = initialize_llm(LLMType.OPENAI)
+        values["llm_model"] = initialize_llm(LLMType.LLAMA)
         return values
 
     def _generate_prompt(self, previous_attempts, inputs):

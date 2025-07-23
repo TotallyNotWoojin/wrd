@@ -21,11 +21,11 @@ class openCHA(BaseModel):
     name: str = "openCHA"
     previous_actions: List[Action] = []
     orchestrator: Orchestrator = None
-    planner_llm: str = LLMType.OPENAI
+    planner_llm: str = LLMType.LLAMA
     planner: str = PlannerType.TREE_OF_THOUGHT
     datapipe: str = DatapipeType.MEMORY
     promptist: str = ""
-    response_generator_llm: str = LLMType.OPENAI
+    response_generator_llm: str = LLMType.LLAMA
     response_generator: str = ResponseGeneratorType.BASE_GENERATOR
     meta: List[str] = []
     verbose: bool = False

@@ -86,11 +86,11 @@ class Orchestrator(BaseModel):
     @classmethod
     def initialize(
         self,
-        planner_llm: str = LLMType.OPENAI,
+        planner_llm: str = LLMType.LLAMA,
         planner_name: str = PlannerType.ZERO_SHOT_REACT_PLANNER,
         datapipe_name: str = DatapipeType.MEMORY,
         promptist_name: str = "",
-        response_generator_llm: str = LLMType.OPENAI,
+        response_generator_llm: str = LLMType.LLAMA,
         response_generator_name: str = ResponseGeneratorType.BASE_GENERATOR,
         available_tasks: Optional[List[str]] = None,
         previous_actions: List[Action] = None,

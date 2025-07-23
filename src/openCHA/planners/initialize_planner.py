@@ -12,7 +12,7 @@ from openCHA.tasks import BaseTask
 
 def initialize_planner(
     tasks: List[BaseTask] = None,
-    llm: str = LLMType.OPENAI,
+    llm: str = LLMType.LLAMA,
     planner: str = PlannerType.TREE_OF_THOUGHT,
     **kwargs: Any,
 ) -> BasePlanner:

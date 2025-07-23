@@ -13,7 +13,7 @@ from openCHA.response_generators import (
 
 
 def initialize_response_generator(
-    llm: str = LLMType.OPENAI,
+    llm: str = LLMType.LLAMA,
     response_generator: str = ResponseGeneratorType.BASE_GENERATOR,
     prefix: str = "",
     **kwargs: Any,
