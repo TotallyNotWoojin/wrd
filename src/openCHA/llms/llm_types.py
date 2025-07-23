@@ -1,7 +1,6 @@
 from enum import Enum
 
-
 class LLMType(str, Enum):
-    OPENAI = "openai"
+    OPENAI    = "openai"
     ANTHROPIC = "anthropic"
-    LLAMA = "llama"
+    LLAMA     = "llama"
